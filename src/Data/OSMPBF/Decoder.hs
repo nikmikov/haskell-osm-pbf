@@ -205,7 +205,5 @@ fromBlob = awaitForever $ \(hdr, blb) -> do
 
 -- | Convert openstreetmap encoded in PBF format to stream of OSM primitives
 conduitPbfToPrimitives :: (MonadThrow m, MonadBase base m, PrimMonad base)
-                          => Conduit BS.ByteString m String
-conduitPbfToPrimitives = conduitGet getBlob
-                       =$= fromBlob
-                       =$= CC.map show
+                          => Conduit BS.ByteString m PBFPrimitive
+conduitPbfToPrimitives = conduitGet getBlob =$= fromBlob
