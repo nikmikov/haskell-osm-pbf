@@ -2,7 +2,7 @@
 -- documentation, see http://haskell.org/cabal/users-guide/
 
 name:                haskell-osm-pbf
-version:             0.1.0.0
+version:             0.0.0.1
 synopsis:            OpenStreetMap PBF format reader library
 description:         Please see README.md
 license:             GPL-3

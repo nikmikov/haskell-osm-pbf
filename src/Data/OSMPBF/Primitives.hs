@@ -3,6 +3,8 @@ module Data.OSMPBF.Primitives where
 import Data.Text (Text)
 import Data.Int
 import Data.OSMPBF.Osmformat(RelationMemberType)
+import Data.Maybe(isJust)
+import Data.Foldable(find)
 
 -- latlon in nanoseconds
 type LatLon = (Int64, Int64)
@@ -53,3 +55,31 @@ data PBFPrimitive = PBFNode Node
                   | PBFRelation Relation
                   | PBFHeader Header
                     deriving (Show)
+
+
+-- | returns true if tag with given key exists
+tagExists :: Text -> [Tag] -> Bool
+tagExists k t = isJust $ findTag k t
+
+-- | find tag by key
+findTag :: Text -> [Tag] -> Maybe Tag
+findTag key = find ( (==) key . fst )
+
+-- | get list of tags from primitive
+tagsFromPrimitive :: PBFPrimitive -> [Tag]
+tagsFromPrimitive (PBFWay w) = wayTags w
+tagsFromPrimitive (PBFNode n) = nodeTags n
+tagsFromPrimitive (PBFRelation r) = relTags r
+tagsFromPrimitive (PBFHeader _) = []
+
+findTagPrim :: Text -> PBFPrimitive -> Maybe Tag
+findTagPrim k = findTag k . tagsFromPrimitive
+
+
+getNode :: PBFPrimitive -> Maybe Node
+getNode (PBFNode n) = Just n
+getNode _ = Nothing
+
+getWay :: PBFPrimitive -> Maybe Way
+getWay (PBFWay n) = Just n
+getWay _ = Nothing

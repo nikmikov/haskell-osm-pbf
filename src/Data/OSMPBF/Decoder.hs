@@ -86,7 +86,7 @@ getHeaderBlock = PB.decodeMessage
 getPrimitiveBlock :: Get OF.PrimitiveBlock
 getPrimitiveBlock = PB.decodeMessage
 
--- | 
+-- |
 bboxFromHeader :: OF.HeaderBBox -> BBox
 bboxFromHeader (OF.HeaderBBox lft rht top btm) =
   BBox (fromIntegral $ PB.getField top, fromIntegral $ PB.getField rht)
@@ -120,7 +120,7 @@ sourcePg  = awaitForever $ \pg -> do
   CC.yieldMany (PB.getField $ OF.ways pg) =$= CC.mapM (fmap PBFWay . wayToPrimitive)
   CC.yieldMany (PB.getField $ OF.relations pg) =$= CC.mapM (fmap PBFRelation . relToPrimitive)
 
--- | unpack indexes based Tag array to strings 
+-- | unpack indexes based Tag array to strings
 unpackTags :: V.Vector T.Text -> [(Word32, Word32)] -> [Tag]
 unpackTags st = map (\(k,v) -> (st ! fromIntegral k, st ! fromIntegral v) )
 
@@ -185,7 +185,7 @@ decodeBlock tp =
     "OSMData"   -> conduitGet getPrimitiveBlock =$= sourcePrimitives
     _ -> fail $ "Unknown OSM block type:" ++ show tp
 
-         
+
 fromBlob :: (MonadThrow m, MonadBase base m, PrimMonad base)
             => Conduit (FF.BlobHeader, FF.Blob) m PBFPrimitive
 fromBlob = awaitForever $ \(hdr, blb) -> do
